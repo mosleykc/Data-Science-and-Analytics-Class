@@ -1,0 +1,83 @@
+Sub Stock_Market_Multi_year()
+
+    
+    'Homework Assignment - Easy
+    'Loop through each year of stock data and grab the total amount of volume each stock had over a year
+    
+   
+    'Loop through all worksheets
+   For Each ws In Worksheets
+    
+     
+         'find number of last row
+        LastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+        
+        ' Create var to store Ticker symbol
+        Dim Ticker_Symbol As String
+        
+        ' Create var for total stock volume
+        Dim Total_Stock_Vol As Double
+        
+        'create var for each ticker and set to 0
+        Total_Stock_Vol = 0
+        
+        'Store Ticker Symbol
+        Dim Ticker_Symbol_Summary_Row As Long
+        Ticker_Symbol_Summary_Row = 2
+        
+        'Add headers for Ticker and Total stock vol
+            Dim TickerColHdr As Range
+            Dim TickerHeader As Range
+            Dim TotStockVolColHdr As Range
+            Dim StockVolHdr As Range
+        
+        'Looks in entire first row for <vol> and prints column headers
+            Set TickerHeader = ws.Range("1:1")
+            Set TickerColHdr = TickerHeader.Find(what:="<vol>", After:=Cells(1, 1))
+            TickerColHdr.Offset(0, 2).Value = "Ticker"
+            
+            Set StockVolHdr = ws.Range("1:1")
+            Set TotStockVolColHdr = StockVolHdr.Find(what:="<vol>", After:=Cells(1, 1))
+            TotStockVolColHdr.Offset(0, 3).Value = "Total Stock Volume"
+         
+            
+        'Loop through columns and rows
+        
+        For I = 2 To LastRow
+        
+            'check for new Ticker Symbol
+            If ws.Cells(I + 1, 1).Value <> Cells(I, 1).Value Then
+                        
+                'assign Ticker Symbol value
+                Ticker_Symbol = Cells(I, 1).Value
+                
+                'Add Total Stock Vol
+                Total_Stock_Vol = Total_Stock_Vol + Cells(I, 7).Value
+                
+                'Print Ticker Symbol in column I
+                ws.Range("I" & Ticker_Symbol_Summary_Row).Value = Ticker_Symbol
+                
+                'Print Total Volume based on Ticker Symbol
+                ws.Range("J" & Ticker_Symbol_Summary_Row).Value = Total_Stock_Vol
+                
+                'Increase one to the Ticker Symbol Summary Row count
+                Ticker_Symbol_Summary_Row = Ticker_Symbol_Summary_Row + 1
+                
+                'Reset Ticker Counter to 0
+                Total_Stock_Vol = 0
+                
+                'if the next cell is the same as the previous row cell
+            Else
+            
+            'Add to the Total Stock Vol
+                Total_Stock_Vol = Total_Stock_Vol + Cells(I, 7).Value
+            
+            End If
+     
+              
+      Next I
+  
+    Next ws
+
+End Sub
+
